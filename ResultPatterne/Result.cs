@@ -1,24 +1,35 @@
-﻿public class Result
+﻿using ResultPattern;
+
+public class Result
 {
     public string? ResponseText { get; }
 
-    public string? Error { get; }
+    public AppError? Error { get; }
 
     public int StatusCode { get; }
 
     public bool IsSuccess { get; }
 
-    private Result(bool isSuccess, string error, int statusCode, string? reponseText = null)
+    private Result(int statusCode, string? reponseText = null)
     {
         ResponseText = reponseText;
         StatusCode = statusCode;
-        Error = error;
-        IsSuccess = isSuccess;
+        IsSuccess = true;
     }
 
-    public static Result Success(int statusCode, string? responseText = null)
-        => new(true, null!, statusCode, responseText);
+    private Result(AppError error)
+    {
+        IsSuccess = false;
+        StatusCode = error.StatusCode;
+        Error = error;
+    }
 
-    public static Result Failure(string error, int statusCode)
-        => new(false, error, statusCode);
+    public static implicit operator Result(AppError error)
+        => new(error);
+
+    public static implicit operator Result(int statusCode)
+    => new(statusCode);
+
+    public static implicit operator Result((int statusCode, string? responseText) input)
+        => new(input.statusCode, input.responseText);
 }
