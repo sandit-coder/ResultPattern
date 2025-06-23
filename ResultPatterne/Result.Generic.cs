@@ -11,10 +11,13 @@ public class Result<TValue>
     
     public int StatusCode { get; }
 
+    public string? ResponseText { get; }
+
     public bool IsSuccess { get; }
 
-    private Result(TValue value, int statusCode)
+    private Result(TValue value, string responseText = null, int statusCode)
     {
+        ResponseText = responseText;
         StatusCode = statusCode;
         Value = value;
         IsSuccess = true;
