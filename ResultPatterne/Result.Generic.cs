@@ -15,8 +15,9 @@ public class Result<TValue>
 
     public bool IsSuccess { get; }
 
-    private Result(TValue value, string responseText = null, int statusCode)
+    private Result(TValue value, string responseText = null)
     {
+        StatusCode = 200 //in Asp.net - StatusCodes.Status200Ok
         ResponseText = responseText;
         StatusCode = statusCode;
         Value = value;
@@ -34,6 +35,6 @@ public class Result<TValue>
     public static implicit operator Result<TValue>(AppError error)
        => new(error);
 
-    public static implicit operator Result<TValue>((TValue value, int statusCode) input)
-        => new(input.value, input.statusCode);
+    public static implicit operator Result<TValue>((TValue value, string responseText) input)
+        => new(input.value, input.responseText);
 }
