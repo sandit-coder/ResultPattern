@@ -8,18 +8,17 @@ public class Result<TValue>
     public TValue? Value { get; }
 
     public AppError? Error { get; }
-    
+
     public int StatusCode { get; }
 
     public string? ResponseText { get; }
 
     public bool IsSuccess { get; }
 
-    private Result(TValue value, string responseText = null)
+    private Result(TValue value, string? responseText = null)
     {
-        StatusCode = 200 //in Asp.net - StatusCodes.Status200Ok
         ResponseText = responseText;
-        StatusCode = statusCode;
+        StatusCode = StatusCodes.Status200OK;
         Value = value;
         IsSuccess = true;
         Error = default;
@@ -35,6 +34,9 @@ public class Result<TValue>
     public static implicit operator Result<TValue>(AppError error)
        => new(error);
 
-    public static implicit operator Result<TValue>((TValue value, string responseText) input)
+    public static implicit operator Result<TValue>(TValue value)
+        => new(value);
+
+    public static implicit operator Result<TValue>((TValue value, string? responseText) input)
         => new(input.value, input.responseText);
 }
